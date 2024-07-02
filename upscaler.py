@@ -7,10 +7,13 @@ from basicsr.utils.download_util import load_file_from_url
 from realesrgan import RealESRGANer
 
 
-class Upscaler():
+class Upscaler:
+    def __init__(self, device=None, gpu_id=None):
+        self.device = device
+        self.gpu_id = None
+
     def upscale(self, img, model_name="RealESRGAN_x4plus", denoise_strength=0.5, tile_pad=10, tile=0, pre_pad=0,
-                fp32=True,
-                gpu_id=None, outscale=4):
+                fp32=True, outscale=4):
 
         # select model
         model = None
@@ -68,7 +71,8 @@ class Upscaler():
             tile_pad=tile_pad,
             pre_pad=pre_pad,
             half=not fp32,
-            gpu_id=gpu_id)
+            device=self.device,
+            gpu_id=self.gpu_id)
 
         if len(img.shape) == 3 and img.shape[2] == 4:
             img_mode = 'RGBA'
